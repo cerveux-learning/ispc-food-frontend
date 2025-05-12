@@ -1,5 +1,6 @@
 <div class="dash">
-  <h1>Hola {{nombre}}, Bienvenido a tu Panel de control</h1>
+  <h1 class="mb-4">Hola {{ nombre }}, Bienvenido a tu Panel de control</h1>
+
   <ul class="nav nav-tabs">
     <li class="nav-item">
       <button class="nav-link" [class.active]="activeTab === 'Pendientes'" (click)="setActiveTab('Pendientes')">Pendientes</button>
@@ -13,7 +14,7 @@
   </ul>
 
   <div *ngIf="pedidosFiltrados.length > 0" class="table-responsive mt-3">
-    <table class="table table-dark table-striped">
+    <table class="table table-dark table-striped align-middle">
       <thead>
         <tr>
           <th>Fecha</th>
@@ -29,25 +30,28 @@
           <td>{{ pedido.fecha_pedido | date }}</td>
           <td>{{ pedido.direccion_entrega }}</td>
           <td>{{ pedido.estado }}</td>
+
+          <!-- Producto -->
           <td>
-            <ul>
+            <ul class="list-unstyled mb-0">
               <li *ngFor="let detalle of pedido.detalles">
-                {{ detalle.cantidad_productos }} - {{detalle.producto["nombre_producto"]}}
+                {{ detalle.cantidad_productos }}x {{ detalle.nombre_producto }}
               </li>
             </ul>
           </td>
+
+          <!-- Precio Unitario -->
           <td>
-            <ul>
-
+            <ul class="list-unstyled mb-0">
               <li *ngFor="let detalle of pedido.detalles">
-
-
                 {{ detalle.precio_producto | currency:'ARS' }}
               </li>
             </ul>
           </td>
+
+          <!-- Subtotal -->
           <td>
-            <ul>
+            <ul class="list-unstyled mb-0">
               <li *ngFor="let detalle of pedido.detalles">
                 {{ detalle.subtotal | currency:'ARS' }}
               </li>
@@ -57,7 +61,8 @@
       </tbody>
     </table>
   </div>
-  <div *ngIf="pedidosFiltrados.length === 0">
-    <p>No hay pedidos con el estado seleccionado.</p>
+
+  <div *ngIf="pedidosFiltrados.length === 0" class="mt-4">
+    <p class="text-muted">No hay pedidos con el estado seleccionado.</p>
   </div>
 </div>

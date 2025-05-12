@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DashboardService, IPedido, IPedidosData } from '../../services/dashboard.service';
+import { DashboardService, IPedido, IPedidosData, ResultPedido } from '../../services/dashboard.service';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
@@ -19,7 +19,7 @@ export class DashboardComponent implements OnInit{
   pedidosData: IPedidosData = { pendientes: [], aprobados: [], entregados: [] };
   pedidosFiltrados: IPedido[] = [];
   activeTab: string = 'Pendientes';
-nombre:string = '';
+  nombre:string = '';
   constructor(private dashboardService: DashboardService, private authService: AuthService, private toastr: ToastrService) {}
 
 
@@ -27,9 +27,17 @@ nombre:string = '';
 
     this.nombre = localStorage.getItem('nameUser')!;
     this.dashboardService.obtenerPedidos().subscribe({
-      next:(data: IPedidosData) => {
+      next:(data: ResultPedido) => {
         console.log(data)
-      this.pedidosData = data;
+        const pendientes = data.results.filter(( pedido ) => pedido.estado ==='Pendiente')
+        const aprobados = data.results.filter(( pedido ) => pedido.estado ==='Aprobado por Chayanne')
+        const entregados = data.results.filter(( pedido ) => pedido.estado ==='Entregado')
+        this.pedidosData = {
+          pendientes: pendientes,
+          aprobados: aprobados,
+          entregados: entregados,
+        };
+        console.log(this.pedidosData)
       this.setActiveTab(this.activeTab);
     }, error: (error) => {
       if (error.error.detail == 'Given token not valid for any token type') {
@@ -48,12 +56,15 @@ nombre:string = '';
     this.activeTab = tab;
     switch (tab) {
       case 'Pendientes':
-        this.pedidosFiltrados = this.pedidosData["pendientes"];
+        this.pedidosFiltrados = [];
+        this.pedidosFiltrados = this.pedidosData.pendientes;
         break;
-      case 'Aprobados':
+        case 'Aprobados':
+        this.pedidosFiltrados = [];
         this.pedidosFiltrados = this.pedidosData.aprobados;
         break;
-      case 'Entregados':
+        case 'Entregados':
+        this.pedidosFiltrados = [];
         this.pedidosFiltrados = this.pedidosData.entregados;
         break;
       default:

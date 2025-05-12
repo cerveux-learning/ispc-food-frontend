@@ -12,6 +12,7 @@ export interface IDetalle {
   cantidad_productos: number;
   precio_producto: number;
   subtotal: number;
+  nombre_producto: string;
   producto: IProducto;
 }
 
@@ -20,6 +21,10 @@ export interface IPedido {
   direccion_entrega: string;
   estado: string;
   detalles: IDetalle[];
+}
+
+export interface ResultPedido {
+  results: IPedido[]
 }
 
 export interface IPedidosData {
@@ -39,9 +44,9 @@ export class DashboardService {
 
   constructor(private http: HttpClient) { }
 
-  obtenerPedidos(): Observable<IPedidosData> {
+  obtenerPedidos(): Observable<ResultPedido> {
     
-    return this.http.get<IPedidosData>(this.apiUrl);
+    return this.http.get<ResultPedido>(this.apiUrl);
   }
 
   agregarPedido(pedido: IPedido): Observable<IPedido> {
