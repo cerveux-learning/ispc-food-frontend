@@ -29,7 +29,7 @@
         <tr *ngFor="let pedido of pedidosFiltrados">
           <td>{{ pedido.fecha_pedido | date }}</td>
           <td>{{ pedido.direccion_entrega }}</td>
-          <td>{{ pedido.estado }}</td>
+          <td>{{ pedido.estado == "Aprobado por Chayanne" ? "Aprobado" : pedido.estado }}</td>
 
           <!-- Producto -->
           <td>
